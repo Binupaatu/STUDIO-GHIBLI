@@ -1,0 +1,22 @@
+const dotEnv = require("dotenv");
+
+if (process.env.NODE_ENV !== "prod") {
+  const configFile = `./.env.${process.env.NODE_ENV}`;
+  dotEnv.config({ path: configFile });
+} else {
+  dotEnv.config();
+}
+
+module.exports = {
+  _ENV_GATEWAY_SERVICE_PORT: process.env.GATEWAY_SERVICE_PORT,
+  _ENV_COURSE_SERVICE_PORT: process.env.COURSE_SERVICE_PORT,
+  _ENV_CUSTOMER_SERVICE_PORT: process.env.CUSTOMER_SERVICE_PORT,
+  _ENV_ENROLLMENT_SERVICE_PORT: process.env.ENROLLMENT_SERVICE_PORT,
+  _ENV_USER_SERVICE_PORT: process.env.USER_SERVICE_PORT,
+  GATEWAY_SERVICE_END_POINT: process.env.GATEWAY_SERVICE_END_POINT,
+  COURSE_SERVICE_END_POINT: process.env.COURSE_SERVICE_END_POINT,
+  CUSTOMER_SERVICE_END_POINT: process.env.CUSTOMER_SERVICE_END_POINT,
+  ENROLLMENT_SERVICE_END_POINT: process.env.ENROLLMENT_SERVICE_END_POINT,
+  USER_SERVICE_END_POINT: process.env.USER_SERVICE_END_POINT,
+  APPLICATION_PORT: process.env.APPLICATION_PORT,
+};

@@ -1,0 +1,57 @@
+{
+  "name": "studio-ghibli",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/icons-material": "^5.15.6",
+    "@mui/material": "^5.15.12",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "newrelic": "^11.14.0",
+    "payment": "^2.4.6",
+    "react": "^18.2.0",
+    "react-credit-cards": "^0.8.3",
+    "react-dom": "^18.2.0",
+    "react-items-carousel": "^2.8.0",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.8",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "CI=false && env-cmd -f .env react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "sonar": "node_modules/sonar-scanner/bin/sonar-scanner",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha && ./node_modules/.bin/lcov-result-merger 'coverage/**/*.json' | ./node_modules/.bin/lcov-to-sonarqube-incremental > coverage/lcov.info",
+    "sonartest": "nyc npm test"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "studio-ghibli-microservices-users",
+  "version": "1.0.0",
+  "description": "This application will host the user endpopint  of the entire application microservices",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "start-mac": "NODE_ENV=dev nodemon src/index.js",
+    "start-production": "NODE_ENV=production nodemon src/index.js",
+    "start-dev": "NODE_ENV=dev nodemon src/index.js",
+    "start-mac-lc": "NODE_ENV=local nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "#microservices",
+    "#users",
+    "#studio-ghibli"
+  ],
+  "author": "Aneesh Ramakrishna Pillai | L00179208",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jest": "^29.7.0",
+    "joi": "^17.12.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.7.0",
+    "newrelic": "^11.14.0",
+    "nodemon": "^3.0.3",
+    "sequelize": "^6.35.2",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  }
+}

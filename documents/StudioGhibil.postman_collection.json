@@ -1,0 +1,997 @@
+{
+	"info": {
+		"_postman_id": "e08d822d-4145-4bb1-88ae-accbd95c4bd7",
+		"name": "StudioGhibil",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1173283",
+		"_collection_link": "https://adinntech.postman.co/workspace/New-Team-Workspace~8273b675-0ea4-4852-a452-ad5232788632/collection/1173283-e08d822d-4145-4bb1-88ae-accbd95c4bd7?action=share&source=collection_link&creator=1173283"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email_id\": \"admin@admin.com\",\n    \"password\": \"admin\",\n    \"username\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email_id\": \"admin@admin.com\",\n    \"password\": \"admin\",\n    \"username\": \"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{user_base_url}}/login",
+									"host": [
+										"{{user_base_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "User Login Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email_id\": \"admin@admin.com\",\n    \"password\": \"admin\",\n    \"username\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email_id\": \"admin@admin.com\",\n    \"password\": \"admin\",\n    \"username\": \"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{user_base_url}}/login",
+									"host": [
+										"{{user_base_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"admin123#\",\n  \"email\": \"admin@studioghibli.com\",\n  \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_base_url}}",
+							"host": [
+								"{{user_base_url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User//Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\",\n  \"email_id\": \"admin@admin.com\",\n  \"role\": \"admin\",\n  \"full_name\": \"Super Administrator\",\n  \"phone_no\": \"588576884\",\n  \"area_of_interests\": \"\",\n  \"status\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{user_base_url}}/signup",
+									"host": [
+										"{{user_base_url}}"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\",\n  \"email_id\": \"admin@admin.com\",\n  \"role\": \"admin\",\n  \"full_name\": \"Super Administrator\",\n  \"phone_no\": \"588576884\",\n  \"area_of_interests\": \"\",\n  \"status\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{customer_base_url}}",
+							"host": [
+								"{{customer_base_url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\",\n  \"email_id\": \"admin@admin.com\",\n  \"role\": \"admin\",\n  \"full_name\": \"Super Administrator\",\n  \"phone_no\": \"588576884\",\n  \"area_of_interests\": \"\",\n  \"status\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{customer_base_url}}",
+									"host": [
+										"{{customer_base_url}}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "List Customers",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Customer",
+					"request": {
+						"method": "PUT",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gateway",
+			"item": [
+				{
+					"name": "Frontend",
+					"item": [
+						{
+							"name": "List Courses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/courses",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"courses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View Course",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/courses/16",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"courses",
+										"16"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer Profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{customer_access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/users/verify/token",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"verify",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Profile Update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{customer_access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/customers",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Course Enrollment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{customer_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"course_id\": 1,\n    \"payment_method\": \"Online\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/enrollment",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"enrollment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enrolled Courses",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Signup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"Hubert L. Forrester\",\n    \"email\": \"HubertLForrester@teleworm.us\",\n    \"password\": \"12345678\",\n    \"phone_no\": \"617-202-0261\",\n    \"status\": 1,\n    \"role\" : \"customer\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/customers",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"console.log(jsonData);",
+											"pm.environment.set('customer_access_token', jsonData.token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"HubertLForrester@teleworm.us\",\n    \"password\": \"12345678\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/users/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Courses",
+							"item": [
+								{
+									"name": "List All Courses",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/courses",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"courses"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Course",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Learn Screenwriting with Movies You Know\",\n    \"description\": \"Learn scriptwriting by studying screenplays & films such as Home Alone, Iron Man, Jaws, The Hangover, Alien, & Die Hard.\",\n    \"learning_outcomes\": \"Screenplay structure from critically acclaimed and commercially successful films such as Home Alone, Iron Man, The Hangover, Alien, Jaws, Die Hard, and more.\\r\\nStudy celebrated characters from Cinema such as Rocky, Tony Stark, Ellen Ripley, Diana Prince, and John McClane.\\r\\nStorytelling techniques, movie writing methods, and filmmaking strategies to get your script in the marketplace.\\r\\nGet first-hand screenwriting advice from the screenwriters of Horrible Bosses, Eternals, Dr. Strange and the Multiverse of Madness, and more.\\r\\nComplete a feature film screenplay from conception to finished script.\",\n    \"course_content\": \"Introduction to Screenwriting\\r\\nKiller Opening Scene\\r\\nSet It Up\\r\\nInciting Incident & Hero's Hesitation\",\n    \"is_certified\" : 1,\n    \"author\": \"Jordan Imiola\",\n    \"course_inclusions\": \"No screenwriting or screenplay experience needed. You will learn everything you need to know. on how to write a movie.\\r\\nIf you're new to screenwriting or have several screenplays written and need new storytelling inspiration, you will learn awesome movie writing tips.\",\n    \"rating\": 5,\n    \"total_enrollments\": 0,\n    \"status\": 1\n\n\n\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/courses/create",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"courses",
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Course Details",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/courses/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"courses",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Course",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/courses/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"courses",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit Course",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Learn Screenwriting with Movies You Know Edited\",\n    \"description\": \"Learn scriptwriting by studying screenplays & films such as Home Alone, Iron Man, Jaws, The Hangover, Alien, & Die Hard.\",\n    \"learning_outcomes\": \"Screenplay structure from critically acclaimed and commercially successful films such as Home Alone, Iron Man, The Hangover, Alien, Jaws, Die Hard, and more.\\r\\nStudy celebrated characters from Cinema such as Rocky, Tony Stark, Ellen Ripley, Diana Prince, and John McClane.\\r\\nStorytelling techniques, movie writing methods, and filmmaking strategies to get your script in the marketplace.\\r\\nGet first-hand screenwriting advice from the screenwriters of Horrible Bosses, Eternals, Dr. Strange and the Multiverse of Madness, and more.\\r\\nComplete a feature film screenplay from conception to finished script.\",\n    \"course_content\": \"Introduction to Screenwriting\\r\\nKiller Opening Scene\\r\\nSet It Up\\r\\nInciting Incident & Hero's Hesitation\",\n    \"is_certified\" : 1,\n    \"author\": \"Jordan Imiola\",\n    \"course_inclusions\": \"No screenwriting or screenplay experience needed. You will learn everything you need to know. on how to write a movie.\\r\\nIf you're new to screenwriting or have several screenplays written and need new storytelling inspiration, you will learn awesome movie writing tips.\",\n    \"rating\": 5,\n    \"total_enrollments\": 0,\n    \"status\": 1\n\n\n\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/courses/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"courses",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Customers",
+							"item": [
+								{
+									"name": "List Customers",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/customers/",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"customers",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Customer",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/customers/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"customers",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit Customer",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"full_name\": \"Hubert L Forrester\",\n    \"phone_no\": \"+1 (994) 151-48311\",\n    \"status\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/customers/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"customers",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Customer",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/customers/15",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"customers",
+												"15"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Enrollments",
+							"item": [
+								{
+									"name": "List All Enrollments",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/api/enrollment",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"enrollment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Enrollment",
+									"request": {
+										"method": "GET",
+										"header": []
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"console.log(jsonData);",
+											"pm.environment.set('access_token', jsonData.token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@studioghibli.com\",\n    \"password\": \"admin123#\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/users/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Forgot Password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"current_password\": \"admin\",\n    \"new_password\": \"12345678\",\n    \"confirm_new_password\": \"12345678\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/users/reset-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"reset-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "List All Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{course_base_url}}",
+							"host": [
+								"{{course_base_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Learn Screenwriting with Movies You Know 10\",\n    \"description\": \"Learn scriptwriting by studying screenplays & films such as Home Alone, Iron Man, Jaws, The Hangover, Alien, & Die Hard.\",\n    \"learning_outcomes\": \"Screenplay structure from critically acclaimed and commercially successful films such as Home Alone, Iron Man, The Hangover, Alien, Jaws, Die Hard, and more.\\r\\nStudy celebrated characters from Cinema such as Rocky, Tony Stark, Ellen Ripley, Diana Prince, and John McClane.\\r\\nStorytelling techniques, movie writing methods, and filmmaking strategies to get your script in the marketplace.\\r\\nGet first-hand screenwriting advice from the screenwriters of Horrible Bosses, Eternals, Dr. Strange and the Multiverse of Madness, and more.\\r\\nComplete a feature film screenplay from conception to finished script.\",\n    \"course_content\": \"Introduction to Screenwriting\\r\\nKiller Opening Scene\\r\\nSet It Up\\r\\nInciting Incident & Hero's Hesitation\",\n    \"is_certified\" : 1,\n    \"author\": \"Jordan Imiola\",\n    \"course_inclusions\": \"No screenwriting or screenplay experience needed. You will learn everything you need to know. on how to write a movie.\\r\\nIf you're new to screenwriting or have several screenplays written and need new storytelling inspiration, you will learn awesome movie writing tips.\",\n    \"rating\": 5,\n    \"total_enrollments\": 0,\n    \"status\": 1\n\n\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{course_base_url}}/create",
+							"host": [
+								"{{course_base_url}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Course",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Learn Screenwriting with Movies You Know 16\",\n    \"description\": \"Learn scriptwriting by studying screenplays & films such as Home Alone, Iron Man, Jaws, The Hangover, Alien, & Die Hard.\",\n    \"learning_outcomes\": \"Screenplay structure from critically acclaimed and commercially successful films such as Home Alone, Iron Man, The Hangover, Alien, Jaws, Die Hard, and more.\\r\\nStudy celebrated characters from Cinema such as Rocky, Tony Stark, Ellen Ripley, Diana Prince, and John McClane.\\r\\nStorytelling techniques, movie writing methods, and filmmaking strategies to get your script in the marketplace.\\r\\nGet first-hand screenwriting advice from the screenwriters of Horrible Bosses, Eternals, Dr. Strange and the Multiverse of Madness, and more.\\r\\nComplete a feature film screenplay from conception to finished script.\",\n    \"course_content\": \"Introduction to Screenwriting\\r\\nKiller Opening Scene\\r\\nSet It Up\\r\\nInciting Incident & Hero's Hesitation\",\n    \"is_certified\" : 1,\n    \"author\": \"Jordan Imiola\",\n    \"course_inclusions\": \"No screenwriting or screenplay experience needed. You will learn everything you need to know. on how to write a movie.\\r\\nIf you're new to screenwriting or have several screenplays written and need new storytelling inspiration, you will learn awesome movie writing tips.\",\n    \"rating\": 5,\n    \"total_enrollments\": 0,\n    \"status\": 1\n\n\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{course_base_url}}/16",
+							"host": [
+								"{{course_base_url}}"
+							],
+							"path": [
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Course Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{course_base_url}}/16",
+							"host": [
+								"{{course_base_url}}"
+							],
+							"path": [
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{course_base_url}}/16",
+							"host": [
+								"{{course_base_url}}"
+							],
+							"path": [
+								"16"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enrollment",
+			"item": [
+				{
+					"name": "List All Enrollments",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "View Enrollment",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

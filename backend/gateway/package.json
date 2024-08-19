@@ -1,0 +1,32 @@
+{
+  "name": "studio-ghibli-microservices-gateway",
+  "version": "1.0.0",
+  "description": "This application will host the gateway point of the entire application microservices",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=prod&&nodemon index.js",
+    "dev": " NODE_ENV=dev&&nodemon index.js",
+    "start-mac": "NODE_ENV=dev nodemon src/index.js",
+    "start-dev": "NODE_ENV=dev nodemon src/index.js",
+    "start-production": "NODE_ENV=production nodemon src/index.js",
+    "start-mac-lc": "NODE_ENV=local nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "#microservices",
+    "#gateway",
+    "#studio-ghibli"
+  ],
+  "author": "Aneesh Ramakrishna Pillai | L00179208",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2",
+    "express-http-proxy": "^2.0.0",
+    "newrelic": "^11.14.0",
+    "nodemon": "^3.0.2",
+    "swagger-ui-express": "^5.0.0",
+    "yamljs": "^0.3.0"
+  }
+}

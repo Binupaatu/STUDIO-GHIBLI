@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+    
+    tools {nodejs 'node'}
+    
+    stages {
+        stage('Checkout from GitHub') {
+            steps {
+               checkout scmGit(branches: [[name: '*/development']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Vikx001/Studio-Ghibli.git']])
+            }
+        }
+        stage('Install dependencies'){
+            steps{
+            dir('frontend/studio-ghibli'){
+            sh ('npm install')
+            }
+        }
+    }
+        stage('Build'){
+            steps{
+            dir('frontend/studio-ghibli'){
+            sh ('npm install --save-dev nyc && npm install istanbul --save-dev && npm install --save-dev @babel/plugin-proposal-private-property-in-object && npm run build')
+            }
+        }
+    }
+        stage('Static Code Analysis') {
+      environment {
+        SONAR_URL = "http://44.204.44.47:9000" 
+      }
+       steps {
+            dir('frontend/studio-ghibli'){
+           script{
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+
+
+                    withSonarQubeEnv('sonar') {
+                        //sh "npm install --save-dev mocha chai"
+                        //sh "npm test -- --coverage"
+                       // sh "npm run sonartest"
+                        //sh "npm run coverage"
+                        sh "npm install sonar-scanner"
+                        sh "npm run sonar"
+                                             }
+    }
+}
+}
+}
+}
+                stage('Sonarqube quality gate check') {
+                	steps{
+	                    timeout(time: 1, unit: 'HOURS'){
+	                    	waitForQualityGate abortPipeline: true
+}
+        
+}
+}
+}
+}

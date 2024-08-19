@@ -1,0 +1,943 @@
+openapi: 3.0.0
+info:
+  title: Studio Ghibli API
+  description: An Online platform for movie making courses.
+  version: 0.1.9
+servers:
+  - url: '${GATEWAY_SERVICE_END_POINT}'
+paths:
+  /api/customers:
+    post:
+      summary: Create a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                phone_no:
+                  type: string
+                area_of_interests:
+                  type: string
+                status:
+                  type: integer
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad Request
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        user_id:
+                          type: integer
+                        full_name:
+                          type: string
+                        phone_no:
+                          type: string
+                        area_of_interests:
+                          type: string
+                        status:
+                          type: integer
+                        updated_at:
+                          type: string
+                          format: date-time
+                        created_at:
+                          type: string
+                          format: date-time
+              example:
+                message: "Customer has been created successfully."
+                data:
+                  - id: 1
+                    user_id: 1
+                    full_name: "studio ghibli"
+                    phone_no: "12456879"
+                    area_of_interests: "studio ghibli area of interests"
+                    status: 1
+                    updated_at: "2024-03-21T10:41:44"
+                    created_at: "2024-03-21T10:41:44"
+        '500':
+          description: Internal Server error
+        '208':
+          description: Already Exist
+    get:
+      summary: Returns a list of customers.
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        user_id:
+                          type: integer
+                        full_name:
+                          type: string
+                        phone_no:
+                          type: string
+                        area_of_interests:
+                          type: string
+                        status:
+                          type: integer
+                        updated_at:
+                          type: string
+                          format: date-time
+                        created_at:
+                          type: string
+                          format: date-time
+              example:
+                message: "Customer list retrieved successfully."
+                data:
+                  - id: 1
+                    user_id: 1
+                    full_name: "studio ghibli"
+                    phone_no: "12456879"
+                    area_of_interests: "studio ghibli area of interests"
+                    status: 1
+                    updated_at: "2024-03-21T14:17:34.887Z"
+                    created_at: "2024-03-21T14:17:34.887Z"
+                  - id: 2
+                    user_id: 2
+                    full_name: "another customer"
+                    phone_no: "987654321"
+                    area_of_interests: "another customer area of interests"
+                    status: 1
+                    updated_at: "2024-03-21T14:17:34.887Z"
+                    created_at: "2024-03-21T14:17:34.887Z"
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server error
+  /api/customers/{id}:
+    get:
+          summary: Get details of a customer by ID.
+          description: Optional extended description in CommonMark or HTML.
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            full_name:
+                              type: string
+                            phone_no:
+                              type: string
+                            area_of_interests:
+                              type: string
+                            status:
+                              type: integer
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "Customer details have been fetched successfully."
+                    data:
+                      - id: 1
+                        user_id: 1
+                        full_name: "studio ghibli"
+                        phone_no: "12456879"
+                        area_of_interests: "studio ghibli area of interests"
+                        status: 1
+                        updated_at: "2024-03-21T14:17:34.887Z"
+                        created_at: "2024-03-21T14:17:34.887Z"
+            '400':
+              description: Bad Request
+            '500':
+              description: Internal Server error
+    put:
+      summary: Update customer detail by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                phone_no:
+                  type: string
+                area_of_interests:
+                  type: string
+      responses:
+              '200':
+                description: Ok
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                        data:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              user_id:
+                                type: integer
+                              full_name:
+                                type: string
+                              phone_no:
+                                type: string
+                              area_of_interests:
+                                type: string
+                              status:
+                                type: integer
+                              updated_at:
+                                type: string
+                                format: date-time
+                              created_at:
+                                type: string
+                                format: date-time
+                    example:
+                      message: "Customer details updated successfully."
+                      data:
+                        - full_name: "studio ghibli"
+                          phone_no: "12456879"
+                          area_of_interests: "studio ghibli area of interests"
+              '400':
+                description: Bad Request
+              '500':
+                description: Internal Server error
+    delete:
+          summary: Delete customer by ID.
+          description: Optional extended description in CommonMark or HTML.
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Ok
+            '400':
+              description: User not Exist
+            '500':
+              description: Internal Server error
+  /api/courses/create:
+    post:
+        summary: Create a new course
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  learning_outcomes:
+                    type: string
+                  course_inclusions:
+                    type: string
+                  is_certified:
+                    type: integer
+                  author:
+                    type: string
+                  price:
+                    type: string
+                  course_content:
+                    type: string
+                  rating:
+                    type: integer
+                  total_enrollments:
+                    type: integer
+                  status:
+                    type: integer
+        responses:
+          '200':
+            description: Ok
+          '400':
+            description: Bad Request
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          title:
+                            type: string
+                          description:
+                            type: string
+                          learning_outcomes:
+                            type: string
+                          course_inclusions:
+                            type: string
+                          is_certified:
+                            type: integer
+                          author:
+                            type: string
+                          price:
+                            type: double
+                          course_content:
+                            type: string
+                          rating:
+                            type: integer
+                          total_enrollments:
+                            type: integer
+                          status:
+                            type: integer
+                          updated_at:
+                            type: string
+                            format: date-time
+                          created_at:
+                            type: string
+                            format: date-time
+                example:
+                  message: "course has been created successfully."
+                  data:
+                    - id: 1
+                      title: "Movie Making"
+                      description: "Editing"
+                      learning_outcomes: "Understand the essentials Tools"
+                      course_inclusions: "Certificate of completion"
+                      is_certified: 1
+                      author: "Robot"
+                      price: 25
+                      rating: 2
+                      total_enrollments: 1
+                      status: 1
+                      course_content: "Editing Tools"
+                      updated_at: "2024-03-21T10:41:44"
+                      created_at: "2024-03-21T10:41:44"
+          '500':
+            description: Internal Server error
+          '208':
+            description: Already Exist
+  /api/courses:
+    get:
+        summary: Returns a list of courses.
+        responses:
+          '201':
+            description: Ok
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          title:
+                            type: string
+                          description:
+                            type: string
+                          learning_outcomes:
+                            type: string
+                          course_inclusions:
+                            type: string
+                          is_certified:
+                            type: integer
+                          author:
+                            type: string
+                          price:
+                            type: double
+                          course_content:
+                            type: string
+                          rating:
+                            type: integer
+                          total_enrollments:
+                            type: integer
+                          status:
+                            type: integer
+                          updated_at:
+                            type: string
+                            format: date-time
+                          created_at:
+                            type: string
+                            format: date-time
+                example:
+                  message: "course has been fetched successfully."
+                  data:
+                    - id: 1
+                      title: "Movie Making"
+                      description: "Editing"
+                      learning_outcomes: "Understand the essentials Tools"
+                      course_inclusions: "Certificate of completion"
+                      is_certified: 1
+                      author: "Robot"
+                      price: 25
+                      rating: 2
+                      total_enrollments: 1
+                      status: 1
+                      course_content: "Editing Tools"
+                      updated_at: "2024-03-21T10:41:44"
+                      created_at: "2024-03-21T10:41:44"
+          '400':
+            description: Bad Request
+          '500':
+            description: Internal Server error
+  /api/courses/{id}:
+      get:
+          summary: Return course By id.
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            '201':
+              description: Ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            learning_outcomes:
+                              type: string
+                            course_inclusions:
+                              type: string
+                            is_certified:
+                              type: integer
+                            author:
+                              type: string
+                            price:
+                              type: double
+                            course_content:
+                              type: string
+                            rating:
+                              type: integer
+                            total_enrollments:
+                              type: integer
+                            status:
+                              type: integer
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "course has been fetched successfully."
+                    data:
+                      - id: 1
+                        title: "Movie Making"
+                        description: "Editing"
+                        learning_outcomes: "Understand the essentials Tools"
+                        course_inclusions: "Certificate of completion"
+                        is_certified: 1
+                        author: "Robot"
+                        price: 25
+                        rating: 2
+                        total_enrollments: 1
+                        status: 1
+                        course_content: "Editing Tools"
+                        updated_at: "2024-03-21T10:41:44"
+                        created_at: "2024-03-21T10:41:44"
+            '400':
+              description: Bad Request
+            '500':
+              description: Internal Server error
+      delete:
+          summary: Delete course By Id.
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          responses:
+            '201':
+              description: Ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            learning_outcomes:
+                              type: string
+                            course_inclusions:
+                              type: string
+                            is_certified:
+                              type: integer
+                            author:
+                              type: string
+                            price:
+                              type: double
+                            course_content:
+                              type: string
+                            rating:
+                              type: integer
+                            total_enrollments:
+                              type: integer
+                            status:
+                              type: integer
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "Course has been trashed successfully."
+                    data:
+                      - id: 1
+                        title: "Movie Making"
+                        description: "Editing"
+                        learning_outcomes: "Understand the essentials Tools"
+                        course_inclusions: "Certificate of completion"
+                        is_certified: 1
+                        author: "Robot"
+                        price: 25
+                        rating: 2
+                        total_enrollments: 1
+                        status: 1
+                        course_content: "Editing Tools"
+                        updated_at: "2024-03-21T10:41:44"
+                        created_at: "2024-03-21T10:41:44"
+            '400':
+              description: Bad Request
+            '500':
+              description: Internal Server error
+      put:
+          summary: Update course By Id.
+          parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                type: string
+          requestBody:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        learning_outcomes:
+                          type: string
+                        course_inclusions:
+                          type: string
+                        is_certified:
+                          type: integer
+                        author:
+                          type: string
+                        price:
+                          type: double
+                        course_content:
+                          type: string
+                        rating:
+                          type: integer
+                        total_enrollments:
+                          type: integer
+                        status:
+                          type: integer
+          responses:
+            '201':
+              description: Ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            learning_outcomes:
+                              type: string
+                            course_inclusions:
+                              type: string
+                            is_certified:
+                              type: integer
+                            author:
+                              type: string
+                            price:
+                              type: double
+                            course_content:
+                              type: string
+                            rating:
+                              type: integer
+                            total_enrollments:
+                              type: integer
+                            status:
+                              type: integer
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "Course has been updated successfully."
+                    data:
+                      - id: 1
+                        title: "Movie Making"
+                        description: "Editing"
+                        learning_outcomes: "Understand the essentials Tools"
+                        course_inclusions: "Certificate of completion"
+                        is_certified: 1
+                        author: "Robot"
+                        price: 25
+                        rating: 2
+                        total_enrollments: 1
+                        status: 1
+                        course_content: "Editing Tools"
+                        updated_at: "2024-03-21T10:41:44"
+                        created_at: "2024-03-21T10:41:44"
+            '400':
+              description: Bad Request
+            '500':
+              description: Internal Server error
+  /api/users/login/:
+    post:
+      summary: User Login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+              '200':
+                description: Ok
+              '400':
+                description: Bad Request
+              '500':
+                description: Internal Server error
+  /api/enrollment:
+      post:
+        summary: User Enrollment
+        parameters:
+        - in: header
+          name: auth
+          description: Access token
+          required: true
+          schema:
+            type: string
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_id:
+                    type: string
+                  payment_method:
+                    type: string
+        responses:
+            '200':
+              description: Ok
+            '400':
+              description: Bad Request
+            '201':
+              description: Created
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            course_id:
+                              type: integer
+                            payment_method:
+                              type: string
+                            payment_status:
+                              type: string
+                            status:
+                              type: integer
+                            customer_id:
+                              type: string
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "User has been enrolled successfully."
+                    data:
+                      - id: 1
+                        course_id: 1
+                        payment_method: "card"
+                        payment_status: 1
+                        status: 1
+                        customer_id: "1"
+                        updated_at: "2024-03-22T16:15:38.159Z"
+                        created_at: "2024-03-22T16:15:38.159Z"
+            '500':
+              description: Internal Server error
+            '208':
+              description: Already Exist
+      get:
+        summary: Returns a list of Enrollments.
+        parameters:
+        - in: header
+          name: auth
+          description: Access token
+          required: true
+          schema:
+            type: string
+        responses:
+          '200':
+            description: Ok
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          user_id:
+                            type: integer
+                          full_name:
+                            type: string
+                          phone_no:
+                            type: string
+                          area_of_interests:
+                            type: string
+                          status:
+                            type: integer
+                          updated_at:
+                            type: string
+                            format: date-time
+                          created_at:
+                            type: string
+                            format: date-time
+                example:
+                  message: "Data fetched successfully."
+                  data:
+                    - id: 1
+                      customer_id: 1
+                      course_id: 1
+                      status: 1
+                      payment_method: "cash"
+                      payment_status: 1
+                      enrollment_date: "2024-03-21T14:17:34.887Z"
+                      created_at: "2024-03-21T14:17:34.887Z"
+                      updated_at: "2024-03-21T14:17:34.887Z"
+                      title: "movie editing"
+                      total_enrollments: 5
+                      full_name: "studio Ghibli"
+                      phone_no: "123456789"
+                      email_id: "studioghibli@gmail.com"
+                      
+                    - id: 2
+                      customer_id: 2
+                      course_id: 2
+                      status: 1
+                      payment_method: "cash"
+                      payment_status: 1
+                      enrollment_date: "2024-03-21T14:17:34.887Z"
+                      created_at: "2024-03-21T14:17:34.887Z"
+                      updated_at: "2024-03-21T14:17:34.887Z"
+                      title: "script writing"
+                      total_enrollments: 5
+                      full_name: "studio Ghibli 1"
+                      phone_no: "123456789"
+                      email_id: "studioghibli1@gmail.com"
+          '400':
+            description: Bad Request
+          '500':
+            description: Internal Server error
+  /api/enrollment/{id}:
+      get:
+        summary: Return Enrollments By Course ID.
+        parameters:
+        - in: path
+          name: id
+          description: course id
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: auth
+          description: Access token
+          required: true
+          schema:
+            type: string
+        responses:
+            '200':
+              description: Ok
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            full_name:
+                              type: string
+                            phone_no:
+                              type: string
+                            area_of_interests:
+                              type: string
+                            status:
+                              type: integer
+                            updated_at:
+                              type: string
+                              format: date-time
+                            created_at:
+                              type: string
+                              format: date-time
+                  example:
+                    message: "Data fetched successfully."
+                    data:
+                      - id: 1
+                        customer_id: 1
+                        course_id: 1
+                        status: 1
+                        payment_method: "cash"
+                        payment_status: 1
+                        enrollment_date: "2024-03-21T14:17:34.887Z"
+                        created_at: "2024-03-21T14:17:34.887Z"
+                        updated_at: "2024-03-21T14:17:34.887Z"
+                        title: "movie editing"
+                        total_enrollments: 5
+                        full_name: "studio Ghibli"
+                        phone_no: "123456789"
+                        email_id: "studioghibli@gmail.com"
+            '400':
+              description: Bad Request
+            '500':
+              description: Internal Server error
+

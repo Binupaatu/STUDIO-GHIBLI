@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  admin_frontend:
+    build:
+      context: ./admin_frontend
+      dockerfile: Dockerfiles/Dockerfile.Local
+    ports:
+      - "3000:3000"
+    networks:
+      - sgproject
+
+  courses_backend:
+    build:
+      context: ./backend/courses
+      dockerfile: Dockerfiles/Dockerfile.Local
+    networks:
+      - sgproject
+
+  gateway_backend:
+    build:
+      context: ./backend/gateway
+      dockerfile: Dockerfiles/Dockerfile.Local
+    networks:
+      - sgproject
+
+  customers_backend:
+    build:
+      context: ./backend/customers
+      dockerfile: Dockerfiles/Dockerfile.Local
+    networks:
+      - sgproject
+
+  users_backend:
+    build:
+      context: ./backend/users
+      dockerfile: Dockerfiles/Dockerfile.Local
+    networks:
+      - sgproject
+
+  enrollment_backend:
+    build:
+      context: ./backend/enrollment
+      dockerfile: Dockerfiles/Dockerfile.Local
+    networks:
+      - sgproject
+
+  sql_backend:
+    build:
+      context: ./backend/sql
+      dockerfile: Dockerfiles/Dockerfile.Local
+    environment:
+      MYSQL_ROOT_PASSWORD: sg@group1
+      MYSQL_DATABASE: studio_ghibli_edu
+      MYSQL_USER: sguser
+      MYSQL_PASSWORD: sg@group1
+    networks:
+      - sgproject
+
+networks:
+  sgproject:
+    driver: bridge

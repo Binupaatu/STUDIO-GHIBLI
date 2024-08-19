@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+    environment {
+    DOCKERHUB_CREDENTIALS = credentials('docker_registry')
+    }
+    tools {nodejs 'node'}
+    
+    stages {
+        stage('Checkout from GitHub') {
+            steps {
+               checkout scmGit(branches: [[name: '*/development']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Vikx001/Studio-Ghibli.git']])
+            }
+        }
+        stage('Install dependencies'){ 
+            steps{
+            dir('frontend/studio-ghibli'){
+            sh ('npm install')
+            }
+        }
+    }
+        stage('Build'){
+            steps{
+            dir('frontend/studio-ghibli'){ 
+            sh ('npm install -g license-checker && npm install --save-dev nyc && npm install istanbul --save-dev && npm install --save-dev @babel/plugin-proposal-private-property-in-object && npm run build')
+            }
+        }
+    }
+        stage('Sonarqube Static Code Analysis and Code coverage') {
+      environment {
+        SONAR_URL = "http://3.86.60.45:9000" 
+      }
+       steps {
+            dir('frontend/studio-ghibli'){
+           script{
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+
+
+                    withSonarQubeEnv('sonar') {
+                        //sh "npm install --save-dev mocha chai"
+                        //sh "npm test -- --coverage"
+                       //sh "npm run sonartest"
+                        //sh "npm run coverage"
+                        sh "npm install sonar-scanner"
+                        sh "npm run sonar"
+                                             }
+    }
+}
+}
+}
+}
+                stage('Sonarqube quality gate check') {
+                	steps{
+	                    timeout(time: 1, unit: 'HOURS'){
+	                    	waitForQualityGate abortPipeline: true
+}
+        
+}
+}
+	stage('Generating SBOM'){
+            steps{
+            dir('frontend/studio-ghibli'){ 
+            sh ('license-checker --json --out sbom.json')}
+}
+} 
+stage('Build and Test') {
+            steps {
+                script {
+                    //def folders = ['admin_frontend', 'frontend/studio-ghibli', 'backend/gateway', 'backend/users', 'backend/customers', 'backend/courses', 'backend/enrollment']
+                    def folders = ['frontend/studio-ghibli']
+                    for (folder in folders) {
+                        // Modify folder name to replace / with -
+                        def repositoryName = folder.replaceAll('/', '-')
+                        
+                        // Build Docker image
+                        sh "docker build -f ./${folder}/Dockerfiles/Dockerfile -t studioghibli06/${repositoryName}:$BUILD_NUMBER ./${folder}"
+                        // Run SonarQube analysis
+                        //sh "sonar-scanner -Dsonar.projectKey=${repositoryName} -Dsonar.sources=./${folder}"
+                    }
+                }
+            }
+        }        
+        stage('Login to Dockerhub') {
+            steps{
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push Image') {
+            steps{
+                sh 'docker push studioghibli06/frontend-studio-ghibli:$BUILD_NUMBER'
+            }
+        }
+    }
+post {
+        always {
+            sh 'docker logout'
+        }
+    }
+
+}
