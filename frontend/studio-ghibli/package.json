@@ -57,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0"
   }
