@@ -1,13 +1,13 @@
-
-import React, { useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Snackbar,
+  TextField,
 } from "@mui/material";
+import { context, propagation, SpanStatusCode, trace } from '@opentelemetry/api';
+import React, { useState } from "react";
 
 const SignUpModal = ({ open, handleClose }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +18,7 @@ const SignUpModal = ({ open, handleClose }) => {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  //const tracer = useTracer();  // Use the tracer hook inside the component
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -25,16 +26,24 @@ const SignUpModal = ({ open, handleClose }) => {
   };
 
   const signUpUser = async () => {
+    const tracer = trace.getTracer('frontend');
+    const span = tracer.startSpan('User Signup');
     try {
+       // Set the span as the active span in the current context
+    const activeContext = trace.setSpan(context.active(), span);
+    const carrier = {};
+    // Inject the current context (which includes the active span) into the carrier (headers)
+    propagation.inject(activeContext, carrier);
       const response = await fetch(
         `${process.env.REACT_APP_API_BASE_URL}/api/customers`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...carrier, // Include the trace context in the headers
           },
           body: JSON.stringify({
-            full_name: formData.full_name, 
+            full_name: formData.full_name,
             email: formData.email,
             password: formData.password,
             phone_no: formData.phone_no,
@@ -48,13 +57,19 @@ const SignUpModal = ({ open, handleClose }) => {
       const data = await response.json();
       console.log("Signup successful:", data);
       setSnackbarMessage("Signup successful!");
+      span.setStatus({ code: SpanStatusCode.OK });
       setSnackbarOpen(true);
       handleClose();
     } catch (error) {
       console.error("Error during signup:", error);
       setSnackbarMessage("Signup failed. Please try again.");
       setSnackbarOpen(true);
-    }
+      span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+
+    }finally {
+      span.end();
+      }
+    
   };
 
   const handleSubmit = async (event) => {

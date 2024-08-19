@@ -15,7 +15,7 @@ COPY . .
 # Set NODE_ENV based on build argument
 ENV NODE_ENV='dev'
 
-EXPOSE 8884
+EXPOSE 8885
 
 # Default command (can be overridden at runtime)
 CMD [ "node", "src/index.js" ]

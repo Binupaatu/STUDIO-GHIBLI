@@ -2,65 +2,82 @@ const User = require("../../models/userModel");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const { error } = require("../validations/userSchema");
+const { propagation, trace, SpanStatusCode, context } = require('@opentelemetry/api');
 
 class UserService {
-  async createUser(userData) {
-    const { email, password, status, role } = userData;
-    const returnData = {
-      result: "",
-      data: "",
-    };
-    try {
-      const userExists = await User.findOne({
-        where: {
-          email_id: email,
-          status: 1,
-        },
-      });
-      if (!userExists || null == userExists) {
-        const hashpassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({
-          email_id: email,
-          password: hashpassword,
-          role: role,
-          status: 1,
+      async createUser(userData, carrier) {
+        const parentContext = propagation.extract(context.active(), carrier);
+        const tracer = trace.getTracer('user-service');
+        const span = tracer.startSpan('Create User', {
+            attributes: { 'http.method': 'POST' },
+        }, parentContext);
+        return context.with(trace.setSpan(context.active(), span), async () => {
+            try {
+                const userExists = await User.findOne({
+                    where: { email_id: userData.email, status: 1 },
+                });
+                
+                if (userExists) {
+
+                    throw new Error("User already exists");
+                }
+    
+                const hashedPassword = await bcrypt.hash(userData.password, 10);
+                const newUser = await User.create({
+                    email_id: userData.email,
+                    password: hashedPassword,
+                    role: userData.role,
+                    status: 1,
+                });
+    
+                span.addEvent('New user created');
+                span.setStatus({ code: SpanStatusCode.OK });
+                return { result: true, data: newUser.toJSON() };
+            } catch (error) {
+                span.recordException(error);
+                span.setStatus({ code: SpanStatusCode.ERROR });
+                throw error;
+            } finally {
+                span.end();
+            }
         });
-        returnData.result = true;
-        returnData.data = newUser.toJSON();
-      } else {
-        returnData.result = false;
-        returnData.data = "User already exists !!";
-      }
-    } catch (error) {
-      returnData.result = false;
-      returnData.data = error.message;
     }
-    return returnData;
-  }
+    
 
-  async getAllUsers() {
-    const returnData = {
-      result: "",
-      data: "",
-    };
-    try {
-      const user = await User.findAll({
-        attributes: ["id", "email_id", "role"],
-      });
-      if (user.length === 0) {
-        returnData.result = false;
-        returnData.data = "User is not exist !";
-        return returnData;
-      } else {
-        returnData.result = true;
-        returnData.data = user;
-        return returnData;
+    async getAllUsers() {
+      const tracer = trace.getTracer('user-service');
+      const span = tracer.startSpan('getAllUsers');
+      const returnData = {
+          result: "",
+          data: "",
+      };
+  
+      try {
+          const user = await User.findAll({
+              attributes: ["id", "email_id", "role"],
+          });
+  
+          if (user.length === 0) {
+              returnData.result = false;
+              returnData.data = "User does not exist!";
+              span.setStatus({ code: SpanStatusCode.ERROR, message: 'No users found' });
+              span.end();
+              return returnData;
+          } else {
+              returnData.result = true;
+              returnData.data = user;
+              span.setStatus({ code: SpanStatusCode.OK });
+              span.end();
+              return returnData;
+          }
+      } catch (error) {
+          span.recordException(error);
+          span.setStatus({ code: SpanStatusCode.ERROR });
+          span.end();
+          throw new Error(error.message);
       }
-    } catch {
-      throw new Error(error.message);
-    }
   }
-
+  
   async getUserById(id) {
     const returnData = {
       result: "",
@@ -86,70 +103,10 @@ class UserService {
       throw new Error(error.message);
     }
   }
-
-  async updateUser(id, newdata) {
-    const { full_name, email_id, phone_no, area_of_interests } = newdata;
-    try {
-      const userupdate = await User.update(
-        {
-          email_id: email_id,
-        },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
-
-      const res = await axios.put(CUSTOMER_SERVICE_END_POINT + "/" + id, {
-        full_name,
-        phone_no,
-        area_of_interests,
-      });
-      return userupdate;
-    } catch {
-      throw new Error(error.message);
-    }
-  }
-
-  async deleteUser(id) {
-    try {
-      const userdelete = await User.update(
-        {
-          status: -1,
-        },
-        {
-          where: {
-            id: id,
-          },
-        }
-      );
-      return userdelete;
-    } catch {
-      throw new Error(error.message);
-    }
-  }
-
   async logoutUser(id) {
     req.session.destroy((err) => {
       return res;
     });
-  }
-
-  async updatePassword(id, user) {
-    const hashpassword = await bcrypt.hash(user.password, 10);
-    const updatepwd = await User.update(
-      {
-        password: hashpassword,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
-
-    return updatepwd;
   }
 }
 

@@ -1,27 +1,42 @@
-import React, { useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Snackbar,
+  TextField,
 } from "@mui/material";
+import { context, propagation, SpanStatusCode, trace } from '@opentelemetry/api';
+import React, { useState } from "react";
 
 const LoginModal = ({ open, handleClose, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  //const tracer = useTracer();  // Use the tracer hook inside the component
 
   const loginUser = async (email, password) => {
+    const tracer = trace.getTracer('frontend');
+    const span = tracer.startSpan('User Login');
+
     try {
+      // Set the span as the active span in the current context
+    const activeContext = trace.setSpan(context.active(), span);
+    
+    const carrier = {};
+    
+    // Inject the current context (which includes the active span) into the carrier (headers)
+    propagation.inject(activeContext, carrier);
+
       const response = await fetch(
         `${process.env.REACT_APP_API_BASE_URL}/api/users/login`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...carrier, // Include the trace context in the headers
+
           },
           body: JSON.stringify({
             email,
@@ -37,6 +52,7 @@ const LoginModal = ({ open, handleClose, onLoginSuccess }) => {
         localStorage.setItem("authToken", data.token);
         setSnackbarMessage("You are logged in!");
         setSnackbarOpen(true);
+        span.setStatus({ code: SpanStatusCode.OK });
         onLoginSuccess();
       } else {
         setSnackbarMessage("Login failed. Please try again.");
@@ -46,8 +62,12 @@ const LoginModal = ({ open, handleClose, onLoginSuccess }) => {
     } catch (error) {
       console.error("Error during login:", error);
       setSnackbarMessage("Login failed. Please try again.");
+      span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+
       setSnackbarOpen(true);
-    }
+    }finally {
+      span.end();
+      }
   };
 
   const handleSubmit = async (event) => {

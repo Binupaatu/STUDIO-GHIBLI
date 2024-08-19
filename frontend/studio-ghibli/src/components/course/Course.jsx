@@ -1,17 +1,20 @@
-import React, { useRef, useState } from "react";
+import { AppRegistration } from "@mui/icons-material";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Typography,
 } from "@mui/material";
-import { AppRegistration, Star, StarHalf } from "@mui/icons-material";
+import { context, propagation, SpanStatusCode, trace } from '@opentelemetry/api';
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
+import { useTracer } from '../../tracing';
 import LoginModal from "../Navigation/LoginModal";
 import CreditCard from "../Utilities/CreditCard";
 import StarRating from "../Utilities/StarRating";
+
 
 const Container = styled.div`
   display: flex;
@@ -131,6 +134,7 @@ const Course = ({ item }) => {
   });
 
   const [courseId, setCourseId] = useState("");
+  const tracer = useTracer();  // Initialize the tracer here
 
   const handleCardFormChange = (data) => {
     setFormValues({ ...formValues, ...data });
@@ -169,19 +173,39 @@ const Course = ({ item }) => {
   };
 
   const handlePaymentComplete = async () => {
+    const tracer = trace.getTracer('frontend');
+    const span = tracer.startSpan('Payment');
+  try {
+    // Set the span as the active span in the current context
+    const activeContext = trace.setSpan(context.active(), span);
+    const carrier = {};
+    // Inject the current context (which includes the active span) into the carrier (headers)
+    propagation.inject(activeContext, carrier);
     const formData = { course_id: courseId, payment_method: "card" };
-    const apiResponse = await postEnrollCourse(formData);
+    const apiResponse = await postEnrollCourse(formData,carrier);
     if (apiResponse.ok) {
       setPaymentDialogOpen(false);
       setPaymentComplete(true);
+      span.setStatus({ code: SpanStatusCode.OK });
+
     } else {
       alert(
         "Something went wrong !! Your enrollment attempt was not successful!"
       );
     }
+  } catch (error) {
+    console.error('Payment failed:', error);
+    span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+  } finally {
+    span.end();
+  }
   };
+  const span = tracer.startSpan('User Enrollment');
 
-  const postEnrollCourse = async (data) => {
+  const postEnrollCourse = async (data,carrier) => {
+    const tracer = trace.getTracer('frontend');
+    const span = tracer.startSpan('Fetch Course Details');
+  try {
     const apiUrl = await `${process.env.REACT_APP_API_BASE_URL}/api/enrollment`; // Your API endpoint
     const authToken = localStorage.getItem("authToken");
     const response = await fetch(apiUrl, {
@@ -189,20 +213,57 @@ const Course = ({ item }) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
+        ...carrier,
       },
       body: JSON.stringify(data),
     });
-
+    span.setStatus({ code: SpanStatusCode.OK });
     return response;
+  } catch (error) {
+      console.error('Enrollment failed:', error);
+      span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+      throw error;
+    } finally {
+      span.end();
+    }
   };
 
   const fetchCourseDetails = async (id) => {
+    const span = tracer.startSpan('Fetch Course Details');
+    try {
+      // Set the span as the active span in the current context
+    const activeContext = trace.setSpan(context.active(), span);
+    const carrier = {};
+    // Inject the current context (which includes the active span) into the carrier (headers)
+    propagation.inject(activeContext, carrier);
     const apiUrl =
       await `${process.env.REACT_APP_API_BASE_URL}/api/courses/${id}`; // Your API endpoint
-    fetch(apiUrl)
+      // Make the fetch request, including the carrier in the headers
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        ...carrier, // Include the trace context in the headers
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch course details");
+    }
+
+    const data = await response.json();
+    setCourseDetails(data.data);
+
+    // Set the span status to OK
+    span.setStatus({ code: SpanStatusCode.OK });
+   /* fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => setCourseDetails(data.data))
-      .catch((error) => console.error("Failed to fetch data:", error));
+      .catch((error) => console.error("Failed to fetch data:", error));*/
+    }catch (error) {
+        console.error('Failed to fetch data:', error);
+        span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+      } finally {
+        span.end();
+      }
   };
 
   return (

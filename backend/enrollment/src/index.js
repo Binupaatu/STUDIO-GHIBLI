@@ -1,15 +1,21 @@
-require("newrelic");
+require('../tracing'); // Make sure this is the first line
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { error } = require("winston");
 const enrollmentRoutes = require("./api/routes/enrollmentRoutes");
 const { ENROLLMENT_SERVICE_PORT, APPLICATION_PORT } = require("./config");
+const client = require('prom-client');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+//Metrics collection
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 app.use(enrollmentRoutes);
 

@@ -5,8 +5,4 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 router.post("/", enrollmentController.enrollUser);
 router.get("/", enrollmentController.listEnrollments);
-router.get("/user/enrollments", enrollmentController.listUserEnrollments);
-
-// GET /course/:id - Retrieve a enrollment by ID
-router.get("/:id", enrollmentController.viewEnrolledUserByCourseId);
 module.exports = router;

@@ -5,17 +5,27 @@ const axios = require("axios");
 
 class EnrollmentService {
   async enrollUser(data, user) {
+    const tracer = trace.getTracer('course-service');
+    const span = tracer.startSpan('createEnrollmentCourse');
     try {
       const insertData = this.extractEnrollFields(data);
       insertData.customer_id = user.id;
       console.log(insertData);
       const enrollment = await Enrollment.create(insertData);
+      span.addEvent('Fetch Course');
+      span.setStatus({ code: SpanStatusCode.OK });
       return enrollment;
     } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
       throw new Error(error.message);
+    }finally {
+      span.end();
     }
   }
   async viewEnrolledUser(data) {
+    const tracer = trace.getTracer('course-service');
+    const span = tracer.startSpan('creatcourseenroll');
     try {
       const enrollment = await Enrollment.findAll({
         attributes: [
@@ -30,9 +40,14 @@ class EnrollmentService {
           "updated_at",
         ],
       });
+      span.setStatus({ code: SpanStatusCode.OK });
       return enrollment;
     } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
       return error.message;
+    }finally {
+      span.end();
     }
   }
   async viewEnrolledUserByCourseId(id) {

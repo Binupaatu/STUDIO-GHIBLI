@@ -5,6 +5,23 @@ const dB = require("../../config/database");
 const ApiService = require("./apiService");
 const UserService = require("./userService");
 const { USER_SERVICE_END_POINT } = require("../../config");
+const { trace, SpanStatusCode } = require('@opentelemetry/api');
+const client = require('prom-client');
+
+// Prometheus metrics setup
+const register = new client.Registry();
+
+// Collect default metrics
+client.collectDefaultMetrics({ register });
+
+// Custom Prometheus metrics
+const serviceRequestDuration = new client.Histogram({
+  name: 'service_request_duration_seconds',
+  help: 'Duration of service requests in seconds',
+  labelNames: ['service', 'operation', 'status_code'],
+  buckets: [0.1, 0.5, 1, 2.5, 5, 10]
+});
+register.registerMetric(serviceRequestDuration);
 
 class CustomerService {
   constructor() {
@@ -13,42 +30,96 @@ class CustomerService {
   }
 
   async createCustomer(data) {
+    const tracer = trace.getTracer('customer-service');
+    const span = tracer.startSpan('CreateCustomer');
+    const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'createCustomer' });
+
     try {
       const customer = await Customer.create(this._extractCustomerFields(data));
+      span.addEvent('New Customer created');
+      span.setStatus({ code: SpanStatusCode.OK });
       return customer;
     } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
       throw new Error(error.message);
+    } finally {
+      const statusCode = span.status.code === SpanStatusCode.OK ? 200 : 500;
+      end({ status_code: statusCode });
+      span.end();
     }
   }
 
   async viewCustomers() {
-    return this._queryDB(
-      "SELECT c.*, u.id as user_id, u.email_id, u.role FROM `customers` c INNER JOIN `users` u ON u.id = c.user_id"
-    );
+    const tracer = trace.getTracer('customer-service');
+    const span = tracer.startSpan('viewCustomers');
+    const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'viewCustomers' });
+
+    try {
+      const customers = await this._queryDB(
+        "SELECT c.*, u.id as user_id, u.email_id, u.role FROM `customers` c INNER JOIN `users` u ON u.id = c.user_id"
+      );
+      span.setStatus({ code: SpanStatusCode.OK });
+      return customers;
+    } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
+      throw error;
+    } finally {
+      const statusCode = span.status.code === SpanStatusCode.OK ? 200 : 500;
+      end({ status_code: statusCode });
+      span.end();
+    }
   }
 
-  async viewCustomerById(id) {
-    return this._findCustomer(id);
+  async viewCustomerById(id,carrier) {
+    const parentContext = propagation.extract(context.active(), carrier);
+    const tracer = trace.getTracer('user-service');
+    
+    const span = tracer.startSpan('fetch User email', {
+      attributes: { 'http.method': 'get' },
+    }, parentContext);
+    const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'viewCustomerById' });
+
+  return context.with(trace.setSpan(context.active(), span), async () => {
+    try {
+      const customer = await this._findCustomer(id);
+      span.addEvent('user fetched');
+      span.setStatus({ code: SpanStatusCode.OK });
+      return customer;
+    } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
+      throw error;
+    } finally {
+      const statusCode = span.status.code === SpanStatusCode.OK ? 200 : 500;
+      end({ status_code: statusCode });
+      span.end();
+    }
+  });
   }
 
   async viewCustomerByUserId(id) {
-    return this._findCustomerByUserId(id);
-  }
+    const tracer = trace.getTracer('customer-service');
+    const span = tracer.startSpan('viewCustomerByUserId');
+    const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'viewCustomerByUserId' });
 
-  async deleteCustomer(id) {
-    return this._deleteCustomer({ id });
-  }
-
-  async updateCustomer(customerDetail, customer_id) {
-    return this._updateCustomer(customerDetail, { id: customer_id });
-  }
-
-  async viewCustomerEnrollments(id) {
-    return this._findEnrollmentsByCustomer(id);
+    try {
+      const customer = await this._findCustomerByUserId(id);
+      span.setStatus({ code: SpanStatusCode.OK });
+      return customer;
+    } catch (error) {
+      span.recordException(error);
+      span.setStatus({ code: SpanStatusCode.ERROR });
+      throw error;
+    } finally {
+      const statusCode = span.status.code === SpanStatusCode.OK ? 200 : 500;
+      end({ status_code: statusCode });
+      span.end();
+    }
   }
 
   async getUserInfo(token) {
-    console.log(`${USER_SERVICE_END_POINT}/verify/token`);
     try {
       const user_info = await axios.get(
         `${USER_SERVICE_END_POINT}/verify/token`,

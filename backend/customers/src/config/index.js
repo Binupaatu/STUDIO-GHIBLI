@@ -1,4 +1,5 @@
 const dotEnv = require("dotenv");
+dotEnv.config();
 if (process.env.NODE_ENV !== "production") {
   const configFile = `./.env.${process.env.NODE_ENV}`;
   dotEnv.config({ path: configFile, override: true });
@@ -16,4 +17,5 @@ module.exports = {
   APP_SECRET: process.env.APP_SECRET,
   USER_SERVICE_END_POINT: process.env.USER_SERVICE_END_POINT,
   APPLICATION_PORT: process.env.APPLICATION_PORT,
+  GATEWAY_SERVICE_END_POINT: process.env.GATEWAY_SERVICE_END_POINT,
 };

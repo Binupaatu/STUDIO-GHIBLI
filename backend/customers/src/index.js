@@ -1,4 +1,4 @@
-require("newrelic");
+require('../tracing'); // Make sure this is the first line
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
