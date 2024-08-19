@@ -14,7 +14,7 @@ const provider = new NodeTracerProvider({
 
 // Configure OTLP trace exporter
 const otlpExporter = new OTLPTraceExporter({
-  url: 'http://localhost:4318/v1/traces', // Ensure this URL is correct
+  url: 'http://otel-collector.observability.svc.cluster.local:4318/v1/traces', // Ensure this URL is correct
 });
 
 // Add the exporter to the provider

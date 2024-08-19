@@ -11,7 +11,7 @@ const provider = new NodeTracerProvider({
 });
 // Configure OTLP exporter
 const otlpExporter = new OTLPTraceExporter({
-  url: 'http://localhost:4318/v1/traces', // Assuming your collector is running on localhost
+  url: 'http://otel-collector.observability.svc.cluster.local:4318/v1/traces', // Assuming your collector is running on localhost
   serviceName: 'Enrollment-service'
 });
 
