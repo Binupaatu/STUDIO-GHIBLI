@@ -20,7 +20,7 @@ const provider = new WebTracerProvider({
 });
 console.log("Trace test")
 const exporter = new OTLPTraceExporter({
-  url: 'http://otel-collector.observability.svc.cluster.local:4318/v1/traces',  // This will be proxied to http://localhost:4318/v1/traces
+  url: '/v1/traces',  // The proxy will forward this to http://localhost:4318/v1/traces
 });
 
 provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
