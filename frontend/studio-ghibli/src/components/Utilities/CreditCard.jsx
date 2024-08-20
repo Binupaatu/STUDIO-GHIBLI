@@ -1,5 +1,5 @@
-import React, { useState, useRef, forwardRef } from "react";
-import ReactDOM from "react-dom";
+import { Grid, TextField, Typography } from "@mui/material";
+import React, { forwardRef, useRef, useState } from "react";
 import Card from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import {
@@ -7,7 +7,6 @@ import {
   formatCVC,
   formatExpirationDate,
 } from "../../utils";
-import { Grid, TextField, Typography } from "@mui/material";
 
 const CreditCard = forwardRef((props) => {
   const [state, setState] = useState({

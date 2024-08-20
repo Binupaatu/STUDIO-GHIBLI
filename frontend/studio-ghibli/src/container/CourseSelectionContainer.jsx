@@ -1,12 +1,12 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
-import Carousel from "../components/CourseSelection/Carousel";
+/*import Carousel from "../components/CourseSelection/Carousel";
 import LinkButton from "../share/UIElements/LinkButton/LinkButton";
 import { pythonData } from "../data/course-selection-data/data";
 import { js } from "../data/course-selection-data/data";
 import { excel } from "../data/course-selection-data/data";
 import { aws } from "../data/course-selection-data/data";
-import { dataScience } from "../data/course-selection-data/data";
+import { dataScience } from "../data/course-selection-data/data";*/
 const initState = {
   name: "Python",
   description:

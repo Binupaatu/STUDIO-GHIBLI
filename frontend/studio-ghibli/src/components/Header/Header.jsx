@@ -1,9 +1,8 @@
+import Card from "./Card/Card";
 import {
-    HeaderContainer,
-    ImageBoxContainer,
-    ImageContainer,
-  } from "./Header.styles";
-  import Card from "./Card/Card";
+  ImageBoxContainer,
+  ImageContainer,
+} from "./Header.styles";
   
   const Header = () => {
     return (

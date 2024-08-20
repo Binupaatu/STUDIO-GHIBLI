@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { context, propagation, SpanStatusCode, trace } from '@opentelemetry/api';
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useTracer } from '../../tracing';
 import LoginModal from "../Navigation/LoginModal";
@@ -116,16 +116,16 @@ const Course = ({ item }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
-  const [cardNumber, setCardNumber] = useState("");
-  const [cvv, setCvv] = useState("");
+  //const [cardNumber, setCardNumber] = useState("");
+  //const [cvv, setCvv] = useState("");
   const [paymentComplete, setPaymentComplete] = useState(false);
 
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [setIsLoggedIn] = useState(false);
 
   const [courseDetails, setCourseDetails] = useState([]);
 
-  const cardFormRef = useRef(null);
+  //const cardFormRef = useRef(null);
 
   const [formValues, setFormValues] = useState({
     number: "",
@@ -140,13 +140,13 @@ const Course = ({ item }) => {
     setFormValues({ ...formValues, ...data });
   };
 
-  const handleEnrollClick = () => {
-    if (null != localStorage.getItem("authToken")) {
+  /*const handleEnrollClick = () => {
+   if (null != localStorage.getItem("authToken")) {
       setDialogOpen(true);
     } else {
       setLoginModalOpen(true);
     }
-  };
+  };*/
 
   const onItemClick = (e, id) => {
     if (id) {

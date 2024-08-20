@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import React, { useEffect, useState } from "react";
+//import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import MenuButton from "../../share/UIElements/MenuButton/MenuButtom";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignupModal";
-import MenuButton from "../../share/UIElements/MenuButton/MenuButtom";
-import RightTooltip from "./RightTooltip/RightTooltip";
-import SearchBar from "./SearchBar/SearchBar";
+//import RightTooltip from "./RightTooltip/RightTooltip";
 import CartTooltip from "./CartTooltip/CartTooltip";
-import Categories from "./Categories/Categories";
-import { AppRegistration, Person } from "@mui/icons-material";
+import SearchBar from "./SearchBar/SearchBar";
+//import Categories from "./Categories/Categories";
+import { Person } from "@mui/icons-material";
 
 const Navigation = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);

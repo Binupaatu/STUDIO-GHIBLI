@@ -3,16 +3,16 @@ import ItemsCarousel from "react-items-carousel";
 import styled from "styled-components";
 
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 import Course from "../course/Course";
 
-const Container = styled.div`
+/*const Container = styled.div`
   margin-top: 6.4rem;
   padding-right: 2.4rem;
   padding-left: 2.4rem;
@@ -32,7 +32,7 @@ const StudentsViewingTitle = styled.h2`
   font-size: 2.4rem;
   letter-spacing: -0.02rem;
   line-height: 1.2;
-`;
+`;*/
 const CourseWrapper = styled.div`
   position: relative;
 `;
@@ -100,6 +100,7 @@ const Carousel = ({ data }) => {
   );
 };
 
+/*
 const ArrowBtn = styled.button`
   border-radius: 50%;
   background-color: black;
@@ -173,6 +174,6 @@ const Rating = styled.img`
 const RateAndRev = styled.div`
   display: flex;
   align-items: center;
-`;
+`;*/
 
 export default Carousel;

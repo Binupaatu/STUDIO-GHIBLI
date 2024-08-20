@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 
-import { courses, sugestedCourses } from "../data/student-viewing-data/data";
+//import { courses, sugestedCourses } from "../data/student-viewing-data/data";
 
 import Course from "../components/course/Course";
 
-import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled from "styled-components";
 
 import { useState } from "react";
 import ItemsCarousel from "react-items-carousel";
@@ -69,7 +69,7 @@ const CopyStudentsViewingContainer = () => {
   const [recentlyAddedCourse, setRecentCourse] = useState([]); //Hello This is set to ok
   const [topRatedCourse, setTopCourse] = useState([]); //Hello This is set to ok
 
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  //const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   useEffect(() => {
     fetchRecentlyAddedCourses();
