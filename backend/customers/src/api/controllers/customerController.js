@@ -1,3 +1,4 @@
+const logger = require('../../../logger'); // Import the logger
 const HttpStatus = require("../../utils/HttpStatus");
 const userService = new (require("../services/userService"))();
 const customerService = new (require("../services/customerService"))();
@@ -42,6 +43,8 @@ async createCustomer(req, res) {
   const end = httpRequestDurationMicroseconds.startTimer();
 
   try {
+    // Log the incoming request
+      logger.info('Creating a new customer', { requestData: req.body });
       const activeContext = trace.setSpan(context.active(), span);
       
       const carrier = {};
@@ -67,9 +70,12 @@ async createCustomer(req, res) {
       } else {
           sendResponse(res, HttpStatus.BAD_REQUEST, userInfo.message);
       }
+      logger.info('Customer created successfully', { customerId: userId });
 
       span.setStatus({ code: SpanStatusCode.OK });
   } catch (error) {
+      logger.error('Error creating customer', { error: error.message });
+
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
       sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, `Error: ${error.message}`);
@@ -84,6 +90,9 @@ async createCustomer(req, res) {
     const end = httpRequestDurationMicroseconds.startTimer();
 
     try {
+            // Log the request
+      logger.info('Fetching all customers');
+
       const activeContext = trace.setSpan(context.active(), span);
       
       const carrier = {};
@@ -97,8 +106,12 @@ async createCustomer(req, res) {
         "User details have been fetched successfully.",
         customers
       );
+      logger.info('Customers fetched successfully');
+
       span.setStatus({ code: SpanStatusCode.OK });
     } catch (error) {
+      logger.error('Error fetching customers', { error: error.message });
+
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       sendResponse(
@@ -121,6 +134,9 @@ async createCustomer(req, res) {
 
     const customer_id = req.params.id;
     try {
+            // Log the request
+            logger.info('Fetching customers by ID');
+
       const customerInfo = await customerService.viewCustomerById(customer_id);
       if (null != customerInfo) {
         sendResponse(
@@ -132,8 +148,12 @@ async createCustomer(req, res) {
       } else {
         sendResponse(res, HttpStatus.BAD_REQUEST, "User is Empty!");
       }
+      logger.info('Customers fetched successfully');
+
       span.setStatus({ code: SpanStatusCode.OK });
     } catch (error) {
+      logger.error('Error fetching customers', { error: error.message });
+
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       sendResponse(
@@ -157,7 +177,9 @@ async createCustomer(req, res) {
   const end = httpRequestDurationMicroseconds.startTimer();
 
     try {
-      
+            // Log the request
+      logger.info('Fetching customers By User ID');
+
       const customerInfo = await customerService.viewCustomerByUserId(user_id,req.headers);
       if (null != customerInfo) {
         sendResponse(
@@ -166,11 +188,15 @@ async createCustomer(req, res) {
           "Customer details have been fetched successfully.",
           customerInfo
         );
+        logger.info('Customers fetched successfully');
+
         span.setStatus({ code: SpanStatusCode.OK });
       } else {
         sendResponse(res, HttpStatus.BAD_REQUEST, "Customer not found!");
       }
     } catch (error) {
+      logger.error('Error fetching customers', { error: error.message });
+
       span.setStatus({
       code: SpanStatusCode.ERROR,
       message: error.message,
