@@ -87,6 +87,7 @@ async createCustomer(req, res) {
   async listCustomers(req, res) {
     const tracer = trace.getTracer('customer-service');
     const span = tracer.startSpan('getAllCustomers');
+    
     const end = httpRequestDurationMicroseconds.startTimer();
 
     try {

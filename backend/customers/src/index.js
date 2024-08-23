@@ -6,8 +6,23 @@ const { error } = require("winston");
 const customerRoutes = require("./api/routes/customerRoutes");
 const { CUSTOMER_SERVICE_PORT, APPLICATION_PORT } = require("./config");
 //const logger = require('../logger'); // Import the logger
+const client = require('prom-client');
 
 const app = express();
+const collectDefaultMetrics = client.collectDefaultMetrics;
+// Enable collection of default metrics
+collectDefaultMetrics();
+
+const customCounter = new client.Counter({
+  name: 'custom_counter_total',
+  help: 'Example of a custom counter for tracking events'
+});
+
+// Create a /metrics endpoint to expose the metrics
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

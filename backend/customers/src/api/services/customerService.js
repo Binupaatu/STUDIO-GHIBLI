@@ -7,7 +7,7 @@ const dB = require("../../config/database");
 const ApiService = require("./apiService");
 const UserService = require("./userService");
 const { USER_SERVICE_END_POINT } = require("../../config");
-const { trace, SpanStatusCode } = require('@opentelemetry/api');
+const { trace, SpanStatusCode, propagation, context  } = require('@opentelemetry/api');
 const client = require('prom-client');
 
 // Prometheus metrics setup
