@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const { error } = require("winston");
 const customerRoutes = require("./api/routes/customerRoutes");
 const { CUSTOMER_SERVICE_PORT, APPLICATION_PORT } = require("./config");
-const logger = require('../logger'); // Import the logger
+//const logger = require('../logger'); // Import the logger
 
 const app = express();
 app.use(cors());
