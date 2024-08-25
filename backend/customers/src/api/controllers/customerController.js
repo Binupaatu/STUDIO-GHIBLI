@@ -7,6 +7,30 @@ const Joi = require("joi");
 const { trace, context, propagation, SpanStatusCode } = require('@opentelemetry/api');
 const client = require('prom-client');
 
+
+// Define custom metrics
+const signupAttempts = new client.Counter({
+  name: 'signup_attempts_total',
+  help: 'Total number of signup attempts'
+});
+
+const signupSuccess = new client.Counter({
+  name: 'signup_success_total',
+  help: 'Total number of successful signup'
+});
+
+const signupFailures = new client.Counter({
+  name: 'signup_failures_total',
+  help: 'Total number of failed signup attempts'
+});
+
+const signupDuration = new client.Histogram({
+  name: 'signup_duration_seconds',
+  help: 'Duration of signup process in seconds',
+  buckets: [0.1, 0.5, 1, 2, 5, 10] // Adjust the buckets as needed
+});
+
+
 // Prometheus metrics setup
 const register = new client.Registry();
 
@@ -41,6 +65,8 @@ async createCustomer(req, res) {
   const tracer = trace.getTracer('customer-service');
   const span = tracer.startSpan('Create Customer');
   const end = httpRequestDurationMicroseconds.startTimer();
+  signupAttempts.inc(); // Increment the signup attempts counter
+  const startTime = Date.now();
 
   try {
     // Log the incoming request
@@ -71,15 +97,20 @@ async createCustomer(req, res) {
           sendResponse(res, HttpStatus.BAD_REQUEST, userInfo.message);
       }
      // logger.info('Customer created successfully', { customerId: userId });
+     signupSuccess.inc(); // Increment the success counter
 
       span.setStatus({ code: SpanStatusCode.OK });
   } catch (error) {
      // logger.error('Error creating customer', { error: error.message });
+     signupFailures.inc(); // Increment the failures counter
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
       sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, `Error: ${error.message}`);
   } finally {
+    const duration = (Date.now() - startTime) / 1000;
+    signupDuration.observe(duration); // Record the duration of the signup process
+
       span.end();
   }
 },
