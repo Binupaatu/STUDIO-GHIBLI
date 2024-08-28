@@ -42,7 +42,7 @@ const httpRequestCounter = new client.Counter({
 
 // Middleware to measure the duration of service invocations
 app.use((req, res, next) => {
-  const end = serviceInvocationDuration.startTimer({ service: 'user-service', method: req.method });
+  const end = serviceInvocationDuration.startTimer({ service: 'course-service', method: req.method });
 
   res.on('finish', () => {
       end({ status_code: res.statusCode });
