@@ -35,6 +35,28 @@ const serviceInvocationDuration = new client.Histogram({
   labelNames: ['service', 'method', 'status_code'],
 });
 
+// Create a histogram to track the latency of network requests
+const networkLatencyHistogram = new client.Histogram({
+  name: 'network_latency_seconds',
+  help: 'Duration of network requests in seconds',
+  labelNames: ['route', 'method', 'status_code'],
+});
+
+app.use((req, res, next) => {
+  const start = process.hrtime();
+
+  res.on('finish', () => {
+      const [seconds, nanoseconds] = process.hrtime(start);
+      const durationInSeconds = seconds + nanoseconds / 1e9;
+
+      // Record the latency with the appropriate labels
+      networkLatencyHistogram.labels(req.route ? req.route.path : req.path, req.method, res.statusCode).observe(durationInSeconds);
+  });
+
+  next();
+});
+
+
 // Middleware to track request duration for all routes
 app.use((req, res, next) => {
   const start = process.hrtime();
