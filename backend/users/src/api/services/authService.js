@@ -13,6 +13,16 @@ const passwordVerificationDuration = new client.Histogram({
   help: 'Duration of password verification in seconds',
   buckets: [0.1, 0.5, 1, 2, 5] // Adjust the buckets as needed
 });
+
+
+// Create a histogram to track the duration of network requests
+const networkLatencyHistogram = new client.Histogram({
+  name: 'network_latency_seconds',
+  help: 'Duration of network requests in seconds',
+  labelNames: ['service', 'method', 'status_code'],
+});
+
+
 const authService = {
   async authenticateUser(email, password,carrier) {
     const tracer = trace.getTracer('auth-service');
@@ -32,17 +42,18 @@ const authService = {
         throw new Error("Invalid credentials");
       }else{
         span.addEvent('Password verified');
+
         const userDetails = await this.getCustomerProfile(user.id,carrier);
         
         const userData = {
           id: user.id,
           profile: userDetails.data || [],
-        };       
-
+        };
         const CourseDetails = await this.getCourseDetails(carrier);
         const token = jwt.sign(userData, APP_SECRET, {
           expiresIn: "1h",
         });
+
         return token;
       }
     }
@@ -63,9 +74,16 @@ const authService = {
     const tracer = trace.getTracer('auth-service');
     const span = tracer.startSpan('getCustomerProfile');
     try {
+      const start = process.hrtime();
       const response = await axios.get(`${CUSTOMER_SERVICE_END_POINT}/user/${user_id}`,{
         headers: carrier
       });
+      const [seconds, nanoseconds] = process.hrtime(start);
+        const durationInSeconds = seconds + nanoseconds / 1e9;
+
+        // Record the duration of the request
+        networkLatencyHistogram.labels('other-service', 'GET', response.status).observe(durationInSeconds);
+
       span.addEvent('API Customer response received');
       if (response.data) {
         span.end();
@@ -74,6 +92,12 @@ const authService = {
         throw new Error('Profile not found');
       }
     } catch (error) {
+      const [seconds, nanoseconds] = process.hrtime(start);
+      const durationInSeconds = seconds + nanoseconds / 1e9;
+
+      // Record the duration even if the request fails
+      networkLatencyHistogram.labels('other-service', 'GET', error.response ? error.response.status : '500').observe(durationInSeconds);
+
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       throw error;
