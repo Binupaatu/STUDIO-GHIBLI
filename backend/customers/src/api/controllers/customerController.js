@@ -24,34 +24,12 @@ const signupFailures = new client.Counter({
   help: 'Total number of failed signup attempts'
 });
 
+
 const signupDuration = new client.Histogram({
-  name: 'signup_duration_seconds',
+  name: 'auth_duration_seconds',
   help: 'Duration of signup process in seconds',
   buckets: [0.1, 0.5, 1, 2, 5, 10] // Adjust the buckets as needed
 });
-
-
-// Prometheus metrics setup
-const register = new client.Registry();
-
-// Collect default metrics
-client.collectDefaultMetrics({ register });
-
-// Custom Prometheus metrics
-const httpRequestDurationMicroseconds = new client.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.5, 1, 2.5, 5, 10] // Buckets for response time duration
-});
-register.registerMetric(httpRequestDurationMicroseconds);
-
-const httpRequestCounter = new client.Counter({
-  name: 'http_requests_total',
-  help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status_code']
-});
-register.registerMetric(httpRequestCounter);
 
 
 // Utility function to send responses
@@ -64,7 +42,6 @@ const CustomerController = {
 async createCustomer(req, res) {
   const tracer = trace.getTracer('customer-service');
   const span = tracer.startSpan('Create Customer');
-  const end = httpRequestDurationMicroseconds.startTimer();
   signupAttempts.inc(); // Increment the signup attempts counter
   const startTime = Date.now();
 
@@ -119,7 +96,6 @@ async createCustomer(req, res) {
     const tracer = trace.getTracer('customer-service');
     const span = tracer.startSpan('getAllCustomers');
     
-    const end = httpRequestDurationMicroseconds.startTimer();
 
     try {
             // Log the request
@@ -153,8 +129,7 @@ async createCustomer(req, res) {
       );
     }finally {
       const responseStatus = res.statusCode;
-      httpRequestCounter.inc({ method: req.method, route: req.route.path, status_code: responseStatus });
-      end({ method: req.method, route: req.route.path, status_code: responseStatus });
+
       span.end();
     }
   },
@@ -162,7 +137,6 @@ async createCustomer(req, res) {
   async viewCustomer(req, res) {
     const tracer = trace.getTracer('customer-service');
     const span = tracer.startSpan('getAllCustomers');
-    const end = httpRequestDurationMicroseconds.startTimer();
 
     const customer_id = req.params.id;
     try {
@@ -195,8 +169,7 @@ async createCustomer(req, res) {
       );
     }finally {
       const responseStatus = res.statusCode;
-      httpRequestCounter.inc({ method: req.method, route: req.route.path, status_code: responseStatus });
-      end({ method: req.method, route: req.route.path, status_code: responseStatus });
+     
       span.end();
     }
   },
@@ -206,7 +179,7 @@ async createCustomer(req, res) {
   const parentContext = propagation.extract(context.active(), req.headers);
   const tracer = trace.getTracer('customer-service');
   const span = tracer.startSpan('Create User', undefined, parentContext);
-  const end = httpRequestDurationMicroseconds.startTimer();
+
 
     try {
             // Log the request
@@ -240,8 +213,6 @@ async createCustomer(req, res) {
       );
     }finally {
       const responseStatus = res.statusCode;
-      httpRequestCounter.inc({ method: req.method, route: req.route.path, status_code: responseStatus });
-      end({ method: req.method, route: req.route.path, status_code: responseStatus });
       span.end();
   }
   },

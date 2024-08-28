@@ -15,6 +15,32 @@ const {
 } = require("./config");
 
 const app = express();
+
+const register = client.register;
+
+// Create a Histogram metric to track HTTP request durations
+const httpRequestDurationMicroseconds = new client.Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds',
+    labelNames: ['method', 'route', 'status_code'],
+});
+
+// Middleware to track request duration for all routes
+app.use((req, res, next) => {
+    const start = process.hrtime();
+
+    res.on('finish', () => {
+        const [seconds, nanoseconds] = process.hrtime(start);
+        const durationInSeconds = seconds + nanoseconds / 1e9;
+
+        httpRequestDurationMicroseconds
+            .labels(req.method, req.route ? req.route.path : req.path, res.statusCode)
+            .observe(durationInSeconds);
+    });
+
+    next();
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

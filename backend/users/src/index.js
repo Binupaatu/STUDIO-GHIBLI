@@ -11,10 +11,29 @@ const app = express();
 const collectDefaultMetrics = client.collectDefaultMetrics;
 // Enable collection of default metrics
 collectDefaultMetrics();
+const register = client.register;
 
-const customCounter = new client.Counter({
-  name: 'custom_counter_total',
-  help: 'Example of a custom counter for tracking events'
+// Create a Histogram metric to track HTTP request durations
+const httpRequestDurationMicroseconds = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+});
+
+// Middleware to track request duration for all routes
+app.use((req, res, next) => {
+  const start = process.hrtime();
+
+  res.on('finish', () => {
+      const [seconds, nanoseconds] = process.hrtime(start);
+      const durationInSeconds = seconds + nanoseconds / 1e9;
+
+      httpRequestDurationMicroseconds
+          .labels(req.method, req.route ? req.route.path : req.path, res.statusCode)
+          .observe(durationInSeconds);
+  });
+
+  next();
 });
 
 // Create a /metrics endpoint to expose the metrics
@@ -27,11 +46,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Example route that increments the custom counter
-app.get('/example', (req, res) => {
-  customCounter.inc(); // Increment the custom counter
-  res.send('Hello World!');
+
+// Expose metrics at /metrics endpoint
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
 });
+
 
 app.use(userRoutes);
 

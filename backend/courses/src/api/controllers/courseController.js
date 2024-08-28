@@ -6,27 +6,30 @@ const service = new courseService();
 const { propagation, context,trace, SpanStatusCode } = require('@opentelemetry/api');
 const client = require('prom-client');
 
-// Prometheus metrics setup
-const register = new client.Registry();
 
-// Collect default metrics
-client.collectDefaultMetrics({ register });
-
-// Custom Prometheus metrics
-const httpRequestDurationMicroseconds = new client.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.1, 0.5, 1, 2.5, 5, 10] // Buckets for response time duration
+// Define custom metrics
+const courseserviceAttempts = new client.Counter({
+  name: 'courseservice_attempts_total',
+  help: 'Total number of course service attempts'
 });
-register.registerMetric(httpRequestDurationMicroseconds);
 
-const httpRequestCounter = new client.Counter({
-  name: 'http_requests_total',
-  help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status_code']
+const courseserviceSuccess = new client.Counter({
+  name: 'courseservice_success_total',
+  help: 'Total number of successful course service attempts'
 });
-register.registerMetric(httpRequestCounter);
+
+const courseserviceFailures = new client.Counter({
+  name: 'courseservice_failures_total',
+  help: 'Total number of failed course service attempts'
+});
+
+
+const courseserviceDuration = new client.Histogram({
+  name: 'auth_duration_seconds',
+  help: 'Duration of course service process in seconds',
+  buckets: [0.1, 0.5, 1, 2, 5, 10] // Adjust the buckets as needed
+});
+
 
 
 const CourseController = {
@@ -40,8 +43,6 @@ const CourseController = {
   async getCourseDetails(req, res) {
     const tracer = trace.getTracer('course-service');
     const span = tracer.startSpan('getAllCourse');
-
-    const end = httpRequestDurationMicroseconds.startTimer();
 
     const courseId = req.params.id;
     try {
@@ -58,8 +59,6 @@ const CourseController = {
       res.status(500).json({ message: error.message });
     }finally {
       const responseStatus = res.statusCode;
-      httpRequestCounter.inc({ method: req.method, route: req.route.path, status_code: responseStatus });
-      end({ method: req.method, route: req.route.path, status_code: responseStatus });
       span.end();
     }
   },
@@ -69,8 +68,9 @@ const CourseController = {
     let span;
     let courses;
 
-    const end = httpRequestDurationMicroseconds.startTimer();
-
+    courseserviceAttempts.inc(); // Increment the signup attempts counter
+    const startTime = Date.now();
+    
     try {
     tracer = trace.getTracer('course-service');
 
@@ -96,6 +96,7 @@ const CourseController = {
             message: "Course has been fetched successfully",
             data: courses,
           });
+          courseserviceSuccess.inc(); // Increment the success counter
           span.setStatus({ code: SpanStatusCode.OK });
       } else {
           res.status(500).send({
@@ -104,14 +105,17 @@ const CourseController = {
           });
       }
     } catch (error) {
+      courseserviceFailures.inc(); // Increment the failures counter
+
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
       res.status(500).json({ message: "Error in Fetching Courses" , error: error.message });
     }finally {
+      const duration = (Date.now() - startTime) / 1000;
+      courseserviceDuration.observe(duration); // Record the duration of the signup process
+
       const responseStatus = res.statusCode;
-      httpRequestCounter.inc({ method: req.method, route: req.route.path, status_code: responseStatus });
-      end({ method: req.method, route: req.route.path, status_code: responseStatus });
-    span.end();
+      span.end();
   }
   },
 
