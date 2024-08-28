@@ -13,11 +13,28 @@ const dB = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   dialect: "mysql",
   port: DB_PORT,
   logging: (query, time) => {
-    const durationInSeconds = time / 1000; // Convert milliseconds to seconds
-    // Assume you have a way to identify the table from the query
-    const table = query.match(/FROM\s+`?(\w+)`?/i)?.[1] || 'unknown';
-    queryDurationHistogram.labels(query.slice(0, 50), table).observe(durationInSeconds);
-    console.log(`Executed (${time}ms): ${query}`);
+    try {
+      // Ensure 'time' is a valid number
+      if (typeof time !== 'number' || isNaN(time)) {
+        throw new Error(`Invalid time value: ${time}`);
+      }
+      const durationInSeconds = time / 1000; // Convert milliseconds to seconds
+      // Extract the table name from the query
+      const match = query.match(/FROM\s+`?(\w+)`?/i);
+      const table = match ? match[1] : 'unknown';
+      // Sanitize query and table names to avoid any special characters that could cause issues
+      const sanitizedQuery = query.slice(0, 50).replace(/[^\w\s]/gi, '');
+      const sanitizedTable = table.replace(/[^\w\s]/gi, '');
+      // Ensure 'durationInSeconds' is a valid number before observing
+      if (!isNaN(durationInSeconds)) {
+        queryDurationHistogram.labels(sanitizedQuery, sanitizedTable).observe(durationInSeconds);
+        console.log(`Executed (${time}ms): ${query}`);
+      } else {
+        console.error(`Invalid duration value: ${durationInSeconds}`);
+      }
+    } catch (error) {
+      console.error(`Logging error: ${error.message}`);
+    }
   }
 
 });
