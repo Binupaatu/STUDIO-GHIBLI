@@ -14,13 +14,13 @@ const passwordVerificationDuration = new client.Histogram({
   buckets: [0.1, 0.5, 1, 2, 5] // Adjust the buckets as needed
 });
 
-
+/*
 // Create a histogram to track the duration of network requests
 const networkLatencyHistogram = new client.Histogram({
   name: 'network_latency_seconds',
   help: 'Duration of network requests in seconds',
   labelNames: ['service', 'method', 'status_code'],
-});
+});*/
 
 
 const authService = {
@@ -82,7 +82,7 @@ const authService = {
         const durationInSeconds = seconds + nanoseconds / 1e9;
 
         // Record the duration of the request
-        networkLatencyHistogram.labels('other-service', 'GET', response.status).observe(durationInSeconds);
+       // networkLatencyHistogram.labels('other-service', 'GET', response.status).observe(durationInSeconds);
 
       span.addEvent('API Customer response received');
       if (response.data) {
@@ -96,7 +96,7 @@ const authService = {
       const durationInSeconds = seconds + nanoseconds / 1e9;
 
       // Record the duration even if the request fails
-      networkLatencyHistogram.labels('other-service', 'GET', error.response ? error.response.status : '500').observe(durationInSeconds);
+      //networkLatencyHistogram.labels('other-service', 'GET', error.response ? error.response.status : '500').observe(durationInSeconds);
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
