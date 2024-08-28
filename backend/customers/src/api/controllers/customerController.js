@@ -30,13 +30,13 @@ const signupDuration = new client.Histogram({
   help: 'Duration of signup process in seconds',
   buckets: [0.1, 0.5, 1, 2, 5, 10] // Adjust the buckets as needed
 });
-
+/*
 // Create a histogram to track the duration of network requests
 const networkLatencyHistogram = new client.Histogram({
   name: 'network_latency_seconds',
   help: 'Duration of network requests in seconds',
   labelNames: ['service', 'method', 'status_code'],
-});
+});*/
 // Utility function to send responses
 const sendResponse = (res, status, message, data = null) => {
   const responseData = { message, data };
@@ -79,7 +79,7 @@ async createCustomer(req, res) {
           const durationInSeconds = seconds + nanoseconds / 1e9;
   
           // Record the duration of the request
-          networkLatencyHistogram.labels('other-service', 'GET', 200).observe(durationInSeconds);
+        //  networkLatencyHistogram.labels('other-service', 'GET', 200).observe(durationInSeconds);
 
           const customer = await customerService.createCustomer(customerData);
           sendResponse(res, HttpStatus.CREATED, "Customer has been created successfully.", customer);
@@ -88,7 +88,7 @@ async createCustomer(req, res) {
         const durationInSeconds = seconds + nanoseconds / 1e9;
 
         // Record the duration even if the request fails
-        networkLatencyHistogram.labels('other-service', 'GET', error.response ? error.response.status : '500').observe(durationInSeconds);
+       // networkLatencyHistogram.labels('other-service', 'GET', error.response ? error.response.status : '500').observe(durationInSeconds);
         sendResponse(res, HttpStatus.BAD_REQUEST, userInfo.message);
       }
      // logger.info('Customer created successfully', { customerId: userId });
