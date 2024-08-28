@@ -25,6 +25,41 @@ const httpRequestDurationMicroseconds = new client.Histogram({
     labelNames: ['method', 'route', 'status_code'],
 });
 
+// Create a histogram to track the duration of service invocations
+const serviceInvocationDuration = new client.Histogram({
+  name: 'service_invocation_duration_seconds',
+  help: 'Duration of service invocations in seconds',
+  labelNames: ['service', 'method', 'status_code'],
+});
+
+
+// Create a counter to track total HTTP requests
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status_code'],
+});
+
+// Middleware to measure the duration of service invocations
+app.use((req, res, next) => {
+  const end = serviceInvocationDuration.startTimer({ service: 'user-service', method: req.method });
+
+  res.on('finish', () => {
+      end({ status_code: res.statusCode });
+  });
+
+  next();
+});
+
+
+// Middleware to increment the counter for each request
+app.use((req, res, next) => {
+  res.on('finish', () => {
+      httpRequestCounter.labels(req.method, req.route ? req.route.path : req.path, res.statusCode).inc();
+  });
+  next();
+});
+
 // Middleware to track request duration for all routes
 app.use((req, res, next) => {
     const start = process.hrtime();
