@@ -1,4 +1,4 @@
-//const logger = require('../../../logger'); // Import the logger
+const logger = require('../../../logger'); // Import the logger
 const HttpStatus = require("../../utils/HttpStatus");
 const userService = new (require("../services/userService"))();
 const customerService = new (require("../services/customerService"))();
@@ -39,8 +39,13 @@ const networkLatencyHistogram = new client.Histogram({
 });*/
 // Utility function to send responses
 const sendResponse = (res, status, message, data = null) => {
+  if (!res.headersSent) {
   const responseData = { message, data };
   res.status(status).json(responseData);
+}
+else{
+  logger.warn('Attempted to send a response after headers were already sent', { status, message });
+}
 };
 
 const CustomerController = {
@@ -52,7 +57,7 @@ async createCustomer(req, res) {
 
   try {
     // Log the incoming request
-     // logger.info('Creating a new customer', { requestData: req.body });
+      logger.info('Creating a new customer', { requestData: req.body });
       const activeContext = trace.setSpan(context.active(), span);
       
       const carrier = {};
@@ -83,6 +88,12 @@ async createCustomer(req, res) {
 
           const customer = await customerService.createCustomer(customerData);
           sendResponse(res, HttpStatus.CREATED, "Customer has been created successfully.", customer);
+          logger.info('Customer created successfully', { customerId: userId });
+          signupSuccess.inc(); // Increment the success counter
+          span.setStatus({ code: SpanStatusCode.OK });
+          return;  // Ensure the function exits after response is sent
+
+      
       } else {
         const [seconds, nanoseconds] = process.hrtime(start);
         const durationInSeconds = seconds + nanoseconds / 1e9;
@@ -96,8 +107,8 @@ async createCustomer(req, res) {
 
       span.setStatus({ code: SpanStatusCode.OK });
   } catch (error) {
-     // logger.error('Error creating customer', { error: error.message });
-     signupFailures.inc(); // Increment the failures counter
+    logger.error('Error creating customer', { error: error.message });
+    signupFailures.inc(); // Increment the failures counter
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
@@ -117,7 +128,7 @@ async createCustomer(req, res) {
 
     try {
             // Log the request
-     /// logger.info('Fetching all customers');
+      logger.info('Fetching all customers');
 
       const activeContext = trace.setSpan(context.active(), span);
       
@@ -136,7 +147,7 @@ async createCustomer(req, res) {
 
       span.setStatus({ code: SpanStatusCode.OK });
     } catch (error) {
-    //logger.error('Error fetching customers', { error: error.message });
+      logger.error('Error fetching customers', { error: error.message });
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
@@ -201,7 +212,7 @@ async createCustomer(req, res) {
 
     try {
             // Log the request
-   //   logger.info('Fetching customers By User ID');
+      logger.info('Fetching customers By User ID');
 
       const customerInfo = await customerService.viewCustomerByUserId(user_id,req.headers);
       if (null != customerInfo) {
@@ -211,14 +222,14 @@ async createCustomer(req, res) {
           "Customer details have been fetched successfully.",
           customerInfo
         );
-     //   logger.info('Customers fetched successfully');
+        logger.info('Customers fetched successfully');
 
         span.setStatus({ code: SpanStatusCode.OK });
       } else {
         sendResponse(res, HttpStatus.BAD_REQUEST, "Customer not found!");
       }
     } catch (error) {
-   //   logger.error('Error fetching customers', { error: error.message });
+      logger.error('Error fetching customers', { error: error.message });
 
       span.setStatus({
       code: SpanStatusCode.ERROR,

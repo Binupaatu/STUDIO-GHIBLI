@@ -1,4 +1,4 @@
-//const logger = require('../../../logger'); // Import the logger
+const logger = require('../../../logger'); // Import the logger
 
 const Customer = require("../../models/customerModel");
 const { QueryTypes } = require("sequelize");
@@ -37,16 +37,16 @@ class CustomerService {
     const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'createCustomer' });
 
     try {
-     // logger.info('Creating customer in the database', { data });
+      logger.info('Creating customer in the database', { data });
 
       const customer = await Customer.create(this._extractCustomerFields(data));
       span.addEvent('New Customer created');
       span.setStatus({ code: SpanStatusCode.OK });
-    //  logger.info('Customer created in database', { customerId: customer.id });
+      logger.info('Customer created in database', { customerId: customer.id });
 
       return customer;
     } catch (error) {
-   //   logger.error('Error creating customer in database', { error: error.message });
+     logger.error('Error creating customer in database', { error: error.message });
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
@@ -64,17 +64,17 @@ class CustomerService {
     const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'viewCustomers' });
 
     try {
-   //   logger.info('Fetching customer from the database');
+      logger.info('Fetching customer from the database');
 
       const customers = await this._queryDB(
         "SELECT c.*, u.id as user_id, u.email_id, u.role FROM `customers` c INNER JOIN `users` u ON u.id = c.user_id"
       );
-    //  logger.info('Customer Successfully Fetched from database');
+      logger.info('Customer Successfully Fetched from database');
 
       span.setStatus({ code: SpanStatusCode.OK });
       return customers;
     } catch (error) {
-     // logger.error('Error Fetching customer From database', { error: error.message });
+      logger.error('Error Fetching customer From database', { error: error.message });
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
@@ -97,16 +97,16 @@ class CustomerService {
 
   return context.with(trace.setSpan(context.active(), span), async () => {
     try {
-    //  logger.info('Fetching customer from the database By ID ',id);
+      logger.info('Fetching customer from the database By ID ',id);
 
       const customer = await this._findCustomer(id);
       span.addEvent('user fetched');
-    //  logger.info('Customer ', id,' Successfully Fetched from database');
+      logger.info('Customer ', id,' Successfully Fetched from database');
 
       span.setStatus({ code: SpanStatusCode.OK });
       return customer;
     } catch (error) {
-    //  logger.error('Error Fetching customer From database', { error: error.message });
+      logger.error('Error Fetching customer From database', { error: error.message });
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
@@ -125,15 +125,15 @@ class CustomerService {
     const end = serviceRequestDuration.startTimer({ service: 'CustomerService', operation: 'viewCustomerByUserId' });
 
     try {
-    //  logger.info('Fetching customer from the database By User ID ',id);
+      logger.info('Fetching customer from the database By User ID ',id);
 
       const customer = await this._findCustomerByUserId(id);
-     // logger.info('Customer ', id,' Successfully Fetched from database');
+      logger.info('Customer ', id,' Successfully Fetched from database');
 
       span.setStatus({ code: SpanStatusCode.OK });
       return customer;
     } catch (error) {
-     // logger.error('Error Fetching customer From database', { error: error.message });
+      logger.error('Error Fetching customer From database', { error: error.message });
 
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });

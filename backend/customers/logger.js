@@ -1,17 +1,14 @@
-const winston = require('winston');
-const { LogstashTransport } = require('winston-logstash-transport');
+const winston = require("winston");
 
 const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new LogstashTransport({
-      port: 5000, // Logstash TCP port
-      host: 'logstash', // Logstash service name in Kubernetes or hostname if running locally
-      protocol: 'tcp', // Protocol to use (tcp or udp)
-      node_name: 'customer-service', // Optional: Node name to identify your service
-      format: winston.format.json(),
-    })
-  ]
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'logs/app.log' })
+    ]
 });
 
 module.exports = logger;
